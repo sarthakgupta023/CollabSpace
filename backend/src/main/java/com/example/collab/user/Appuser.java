@@ -1,10 +1,13 @@
 package com.example.collab.user;
 
-import java.time.Instant;
-import java.util.UUID;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
+import java.util.UUID;
 
 /**
  * TODO: this is a placeholder. Replace with a real user model + password

@@ -1,11 +1,11 @@
 package com.example.collab.history;
 
-import java.time.Instant;
-import java.util.UUID;
-
+import com.example.collab.workspace.Workspace;
+import com.example.collab.workspace.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 
-import com.example.collab.workspace.Workspace;
+import java.time.Instant;
+import java.util.UUID;
 
 @Service
 public class SessionHistoryService {
@@ -14,7 +14,7 @@ public class SessionHistoryService {
     private final WorkspaceRepository workspaceRepository;
 
     public SessionHistoryService(SessionHistoryRepository historyRepository,
-            WorkspaceRepository workspaceRepository) {
+                                  WorkspaceRepository workspaceRepository) {
         this.historyRepository = historyRepository;
         this.workspaceRepository = workspaceRepository;
     }
@@ -30,7 +30,8 @@ public class SessionHistoryService {
                 workspaceId,
                 ownerName,
                 Instant.now(),
-                null);
+                null
+        );
         historyRepository.save(record);
     }
 

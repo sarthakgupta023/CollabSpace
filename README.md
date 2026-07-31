@@ -59,7 +59,3 @@ When requested, the backend converts the saved document state into a clean PDF f
 * **Text Editor:** Tiptap Editor
 * **Collaboration Engine:** Yjs + `y-websocket`
 
----
-
-## Databases
-Used Postgres and MongoDB for storing the sessions and history respectively.

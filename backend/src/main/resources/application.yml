@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: collab-editor
+
+  # --- Postgres: users, workspaces, roles ---
+  datasource:
+    url: jdbc:postgresql://localhost:5432/collab_editor
+    username: collab
+    password: collab
+  jpa:
+    hibernate:
+      # 'update' is fine for local dev; use Flyway/Liquibase migrations for production
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # --- MongoDB: document snapshots + session history ---
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/collab_editor
+
+    # --- Redis: cross-instance WebSocket fan-out ---
+    redis:
+      host: localhost
+      port: 6379
+
+# used to build the shareable join link returned to the frontend
+app:
+  frontend-base-url: http://localhost:5173
+
+# workspace lifetime, in hours (matches the "expire after 3 hours" requirement)
+workspace:
+  expiry-hours: 3
+  # how often the expiry job checks for expired workspaces, in ms
+  expiry-check-interval-ms: 60000
+  # how often buffered Yjs updates are flushed to MongoDB, in ms
+  persistence-flush-interval-ms: 5000

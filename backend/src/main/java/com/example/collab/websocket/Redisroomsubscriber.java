@@ -1,10 +1,11 @@
 package com.example.collab.websocket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
-
-import tools.jackson.databind.ObjectMapper;
 
 /**
  * Fired for EVERY message published on the "workspace-updates" Redis channel,
@@ -13,7 +14,7 @@ import tools.jackson.databind.ObjectMapper;
  * excluding the original sender - so nobody gets an echo of their own edit.
  */
 @Component
-public class RedisRoomSubscriber {
+public class RedisRoomSubscriber implements MessageListener {
 
     private static final Logger log = LoggerFactory.getLogger(RedisRoomSubscriber.class);
 
@@ -25,9 +26,11 @@ public class RedisRoomSubscriber {
         this.objectMapper = objectMapper;
     }
 
-    public void onMessage(String message) {
+    @Override
+    public void onMessage(Message message, byte[] pattern) {
         try {
-            WorkspaceUpdateEnvelope envelope = objectMapper.readValue(message, WorkspaceUpdateEnvelope.class);
+            String body = new String(message.getBody());
+            WorkspaceUpdateEnvelope envelope = objectMapper.readValue(body, WorkspaceUpdateEnvelope.class);
             switch (envelope.type()) {
                 case "UPDATE" -> registry.broadcastBinaryExcept(
                         envelope.workspaceId(), envelope.senderSessionId(), envelope.decodedData());

@@ -1,11 +1,11 @@
 package com.example.collab.document;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.springframework.stereotype.Service;
 
 /**
  * Updates that arrived on THIS instance since the last flush. Each instance
@@ -23,10 +23,7 @@ public class UpdateBufferService {
         pending.computeIfAbsent(workspaceId, id -> new CopyOnWriteArrayList<>()).add(update);
     }
 
-    /**
-     * Atomically takes and clears everything buffered for a workspace. Empty if
-     * nothing pending.
-     */
+    /** Atomically takes and clears everything buffered for a workspace. Empty if nothing pending. */
     public List<byte[]> drain(String workspaceId) {
         List<byte[]> updates = pending.remove(workspaceId);
         return updates == null ? List.of() : updates;

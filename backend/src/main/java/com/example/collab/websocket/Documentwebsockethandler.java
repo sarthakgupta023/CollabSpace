@@ -1,9 +1,10 @@
 package com.example.collab.websocket;
 
-import static com.example.collab.config.RedisConfig.*;
-
-import java.io.IOException;
-
+import com.example.collab.document.DocumentSnapshot;
+import com.example.collab.document.DocumentSnapshotRepository;
+import com.example.collab.document.UpdateBufferService;
+import com.example.collab.history.SessionHistoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
@@ -11,11 +12,9 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
-import com.example.collab.document.DocumentSnapshot;
-import com.example.collab.document.DocumentSnapshotRepository;
-import com.example.collab.document.UpdateBufferService;
+import java.io.IOException;
 
-import tools.jackson.databind.ObjectMapper;
+import static com.example.collab.config.RedisConfig.CHANNEL_NAME;
 
 /**
  * Yjs updates are opaque binary blobs to this handler - it never decodes
@@ -34,11 +33,11 @@ public class DocumentWebSocketHandler extends BinaryWebSocketHandler {
     private final SessionHistoryService sessionHistoryService;
 
     public DocumentWebSocketHandler(WorkspaceSessionRegistry registry,
-            RedisTemplate<String, String> redisTemplate,
-            ObjectMapper objectMapper,
-            DocumentSnapshotRepository snapshotRepository,
-            UpdateBufferService bufferService,
-            SessionHistoryService sessionHistoryService) {
+                                     RedisTemplate<String, String> redisTemplate,
+                                     ObjectMapper objectMapper,
+                                     DocumentSnapshotRepository snapshotRepository,
+                                     UpdateBufferService bufferService,
+                                     SessionHistoryService sessionHistoryService) {
         this.registry = registry;
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
@@ -70,13 +69,15 @@ public class DocumentWebSocketHandler extends BinaryWebSocketHandler {
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws IOException {
         String workspaceId = workspaceId(session);
-        byte[] update = message.getPayload().array();
+        java.nio.ByteBuffer payload = message.getPayload();
+        byte[] update = new byte[payload.remaining()];
+        payload.get(update);
 
         // 1. Buffer for the next scheduled MongoDB flush.
         bufferService.buffer(workspaceId, update);
 
         // 2. Publish to Redis so every instance (including this one) relays it
-        // to its local peers, excluding the original sender.
+        //    to its local peers, excluding the original sender.
         WorkspaceUpdateEnvelope envelope = WorkspaceUpdateEnvelope.update(workspaceId, session.getId(), update);
         redisTemplate.convertAndSend(CHANNEL_NAME, toJson(envelope));
     }

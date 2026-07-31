@@ -1,16 +1,17 @@
 package com.example.collab.workspace;
 
-import java.time.Instant;
-
+import com.example.collab.websocket.WorkspaceUpdateEnvelope;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
+import java.time.Instant;
+import java.util.UUID;
 
 import static com.example.collab.config.RedisConfig.CHANNEL_NAME;
-import com.example.collab.websocket.WorkspaceUpdateEnvelope;
-
-import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class WorkspaceService {
@@ -24,9 +25,9 @@ public class WorkspaceService {
     private long expiryHours;
 
     public WorkspaceService(WorkspaceRepository workspaceRepository,
-            WorkspaceMemberRepository memberRepository,
-            RedisTemplate<String, String> redisTemplate,
-            ObjectMapper objectMapper) {
+                             WorkspaceMemberRepository memberRepository,
+                             RedisTemplate<String, String> redisTemplate,
+                             ObjectMapper objectMapper) {
         this.workspaceRepository = workspaceRepository;
         this.memberRepository = memberRepository;
         this.redisTemplate = redisTemplate;
@@ -48,10 +49,8 @@ public class WorkspaceService {
 
         return memberRepository.findByWorkspaceIdAndUserId(workspaceId, userId)
                 .orElseGet(() -> {
-                    // default role is VIEWER - the owner can promote to EDITOR from inside the
-                    // workspace.
-                    // TODO: honor an optional ?role=editor invite link here if you add that
-                    // feature.
+                    // default role is VIEWER - the owner can promote to EDITOR from inside the workspace.
+                    // TODO: honor an optional ?role=editor invite link here if you add that feature.
                     WorkspaceMember member = WorkspaceMember.create(workspaceId, userId, displayName, Role.VIEWER);
                     return memberRepository.save(member);
                 });
@@ -65,19 +64,13 @@ public class WorkspaceService {
         return workspace;
     }
 
-    /**
-     * Use this where an expired/ended workspace is a valid, non-error state to
-     * report (e.g. a status check).
-     */
+    /** Use this where an expired/ended workspace is a valid, non-error state to report (e.g. a status check). */
     public Workspace getOrThrow(String workspaceId) {
         return workspaceRepository.findById(workspaceId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workspace not found"));
     }
 
-    /**
-     * Owner-only. Ends the workspace and force-closes every connected client across
-     * all instances.
-     */
+    /** Owner-only. Ends the workspace and force-closes every connected client across all instances. */
     public void end(String workspaceId, String requestingUserId) {
         Workspace workspace = workspaceRepository.findById(workspaceId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workspace not found"));

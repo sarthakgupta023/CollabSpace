@@ -1,16 +1,16 @@
 package com.example.collab.scheduler;
 
-import java.time.Instant;
-import java.util.List;
-
+import com.example.collab.workspace.Workspace;
+import com.example.collab.workspace.WorkspaceRepository;
+import com.example.collab.workspace.WorkspaceService;
+import com.example.collab.workspace.WorkspaceStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.example.collab.workspace.Workspace;
-import com.example.collab.workspace.WorkspaceRepository;
-import com.example.collab.workspace.WorkspaceService;
+import java.time.Instant;
+import java.util.List;
 
 /**
  * Runs on every instance. In a multi-instance deployment this means the

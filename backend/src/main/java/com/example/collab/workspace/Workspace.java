@@ -1,10 +1,11 @@
 package com.example.collab.workspace;
 
-import java.time.Instant;
-import java.util.UUID;
-
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "workspaces")
