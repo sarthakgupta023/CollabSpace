@@ -33,8 +33,11 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  signup: (username) =>
-    request('/auth/signup', { method: 'POST', body: JSON.stringify({ username }) }),
+  requestOtp: (name, email) =>
+    request('/auth/request-otp', { method: 'POST', body: JSON.stringify({ name, email }) }),
+
+  verifyOtp: (email, otp) =>
+    request('/auth/verify-otp', { method: 'POST', body: JSON.stringify({ email, otp }) }),
 
   createWorkspace: (ownerName) =>
     request('/workspaces', { method: 'POST', body: JSON.stringify({ ownerName }) }),

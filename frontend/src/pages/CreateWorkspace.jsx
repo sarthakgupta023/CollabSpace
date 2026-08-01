@@ -67,6 +67,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FAF5ED',
+    backgroundImage: 'url("/mainbg.png")',
     fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
     padding: '20px',
     boxSizing: 'border-box',

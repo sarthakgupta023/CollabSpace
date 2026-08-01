@@ -118,6 +118,7 @@ const styles = {
     position: 'relative',
     minHeight: '100vh',
     backgroundColor: '#FAF5ED',
+    backgroundImage: 'url("/mainbg.png")',
     fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
     padding: '24px 20px',
     boxSizing: 'border-box',

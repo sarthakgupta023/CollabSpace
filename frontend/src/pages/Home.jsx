@@ -8,20 +8,12 @@ export default function Home() {
   const stored = getStoredUser();
 
   useEffect(() => {
-    // TODO: replace with a real login screen once auth is added.
     if (!stored.userId) {
-      const name = window.prompt('Enter your name to continue:');
-      if (name) {
-        api.signup(name).then((res) => {
-          localStorage.setItem('userId', res.userId);
-          localStorage.setItem('username', res.username);
-          setUsername(res.username);
-        });
-      }
+      navigate('/login');
     } else {
       setUsername(stored.username);
     }
-  }, []);
+  }, [navigate, stored.userId, stored.username]);
 
   return (
     <div style={styles.container}>
@@ -81,6 +73,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FAF5ED', // Warm base background
+    backgroundImage: 'url("/mainbg.png")',
     fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
     padding: '20px',
     boxSizing: 'border-box',
