@@ -1,15 +1,21 @@
 package com.example.collab.workspace;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.Instant;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "workspace_members", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"workspace_id", "user_id"})
+        @UniqueConstraint(columnNames = { "workspace_id", "user_id" })
 })
 @Data
 @NoArgsConstructor
