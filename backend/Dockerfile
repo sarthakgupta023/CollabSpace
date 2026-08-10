@@ -21,3 +21,5 @@ EXPOSE 8080
 
 # Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+jdbc:postgresql://collab_editor_q7pu_user:nAD2xYzx2fbxxxxxZcg7DfIa1d2dQTjB@dpg-d9rk5r5bedkc73bu9a1g-a/collab_editor_q7pu
