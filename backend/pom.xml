@@ -96,12 +96,6 @@
                             <version>1.18.32</version>
                         </path>
                     </annotationProcessorPaths>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
