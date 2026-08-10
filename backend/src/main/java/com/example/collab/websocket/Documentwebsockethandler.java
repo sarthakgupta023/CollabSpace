@@ -1,10 +1,7 @@
 package com.example.collab.websocket;
 
-import com.example.collab.document.DocumentSnapshot;
-import com.example.collab.document.DocumentSnapshotRepository;
-import com.example.collab.document.UpdateBufferService;
-import com.example.collab.history.SessionHistoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.BinaryMessage;
@@ -12,9 +9,12 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
-import java.io.IOException;
-
 import static com.example.collab.config.RedisConfig.CHANNEL_NAME;
+import com.example.collab.document.DocumentSnapshot;
+import com.example.collab.document.DocumentSnapshotRepository;
+import com.example.collab.document.UpdateBufferService;
+import com.example.collab.history.SessionHistoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Yjs updates are opaque binary blobs to this handler - it never decodes
@@ -33,11 +33,11 @@ public class DocumentWebSocketHandler extends BinaryWebSocketHandler {
     private final SessionHistoryService sessionHistoryService;
 
     public DocumentWebSocketHandler(WorkspaceSessionRegistry registry,
-                                     RedisTemplate<String, String> redisTemplate,
-                                     ObjectMapper objectMapper,
-                                     DocumentSnapshotRepository snapshotRepository,
-                                     UpdateBufferService bufferService,
-                                     SessionHistoryService sessionHistoryService) {
+            RedisTemplate<String, String> redisTemplate,
+            ObjectMapper objectMapper,
+            DocumentSnapshotRepository snapshotRepository,
+            UpdateBufferService bufferService,
+            SessionHistoryService sessionHistoryService) {
         this.registry = registry;
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
@@ -77,7 +77,7 @@ public class DocumentWebSocketHandler extends BinaryWebSocketHandler {
         bufferService.buffer(workspaceId, update);
 
         // 2. Publish to Redis so every instance (including this one) relays it
-        //    to its local peers, excluding the original sender.
+        // to its local peers, excluding the original sender.
         WorkspaceUpdateEnvelope envelope = WorkspaceUpdateEnvelope.update(workspaceId, session.getId(), update);
         redisTemplate.convertAndSend(CHANNEL_NAME, toJson(envelope));
     }

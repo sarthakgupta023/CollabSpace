@@ -1,14 +1,15 @@
 package com.example.collab.scheduler;
 
-import com.example.collab.document.DocumentSnapshot;
-import com.example.collab.document.DocumentSnapshotRepository;
-import com.example.collab.document.UpdateBufferService;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import com.example.collab.document.DocumentSnapshot;
+import com.example.collab.document.DocumentSnapshotRepository;
+import com.example.collab.document.UpdateBufferService;
 
 /**
  * Flushes whatever this instance has buffered since the last run into
@@ -33,7 +34,8 @@ public class PersistenceFlushJob {
 
         for (String workspaceId : workspaceIds) {
             List<byte[]> pending = bufferService.drain(workspaceId);
-            if (pending.isEmpty()) continue;
+            if (pending.isEmpty())
+                continue;
 
             DocumentSnapshot snapshot = snapshotRepository.findById(workspaceId)
                     .orElseGet(() -> new DocumentSnapshot(workspaceId));

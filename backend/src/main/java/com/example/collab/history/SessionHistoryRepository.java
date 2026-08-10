@@ -1,9 +1,9 @@
 package com.example.collab.history;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface SessionHistoryRepository extends MongoRepository<SessionHistory, String> {
     List<SessionHistory> findByUserIdOrderByJoinedAtDesc(String userId);

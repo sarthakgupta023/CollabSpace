@@ -1,13 +1,13 @@
 package com.example.collab.websocket;
 
+import java.util.Map;
+
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Map;
 
 /**
  * Runs before the WebSocket upgrade completes. Pulls the workspaceId out of
@@ -23,7 +23,7 @@ public class WorkspaceHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                    WebSocketHandler wsHandler, Map<String, Object> attributes) {
+            WebSocketHandler wsHandler, Map<String, Object> attributes) {
         String path = request.getURI().getPath(); // e.g. /ws/workspace/abc123
         String[] segments = path.split("/");
         String workspaceId = segments[segments.length - 1];
@@ -46,7 +46,7 @@ public class WorkspaceHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                WebSocketHandler wsHandler, Exception exception) {
+            WebSocketHandler wsHandler, Exception exception) {
         // no-op
     }
 
