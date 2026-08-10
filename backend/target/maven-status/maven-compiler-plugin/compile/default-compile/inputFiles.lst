@@ -1,5 +1,6 @@
 /Users/sarthakgupta/Desktop/collab-editor/backend/src/main/java/com/example/collab/CollabEditorApplication.java
 /Users/sarthakgupta/Desktop/collab-editor/backend/src/main/java/com/example/collab/config/RedisConfig.java
+/Users/sarthakgupta/Desktop/collab-editor/backend/src/main/java/com/example/collab/config/WebConfig.java
 /Users/sarthakgupta/Desktop/collab-editor/backend/src/main/java/com/example/collab/config/WebSocketConfig.java
 /Users/sarthakgupta/Desktop/collab-editor/backend/src/main/java/com/example/collab/document/DocumentSnapshot.java
 /Users/sarthakgupta/Desktop/collab-editor/backend/src/main/java/com/example/collab/document/DocumentSnapshotRepository.java

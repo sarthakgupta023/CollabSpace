@@ -1,6 +1,9 @@
 // TODO: once real auth is added, swap X-User-Id for an Authorization: Bearer <jwt> header.
 
-const BASE_URL = '/api';
+// Updated BASE_URL to connect to Spring Boot port 8080 locally or env variable in production
+const BASE_URL = import.meta.env.VITE_API_BASE_URL 
+  ? `${import.meta.env.VITE_API_BASE_URL}/api` 
+  : 'http://localhost:8080/api';
 
 function getUserId() {
   return localStorage.getItem('userId');
