@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -7,9 +7,9 @@ spring:
 
   # --- Postgres: users, workspaces, roles ---
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5433/collab_editor
-    username: collab
-    password: collab
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/collab_editor}
+    username: ${SPRING_DATASOURCE_USERNAME:collab}
+    password: ${SPRING_DATASOURCE_PASSWORD:collab}
 
   jpa:
     hibernate:
@@ -20,24 +20,20 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  # --- MongoDB: document snapshots + session history ---
+  # --- MongoDB & Redis ---
   data:
     mongodb:
-      uri: mongodb://127.0.0.1:27017/collab_editor
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://127.0.0.1:27017/collab_editor}
     redis:
-      host: 127.0.0.1
-      port: 6379
-
-
+      host: ${SPRING_DATA_REDIS_HOST:127.0.0.1}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
 
 # used to build the shareable join link returned to the frontend
 app:
-  frontend-base-url: http://localhost:5173
+  frontend-base-url: ${APP_FRONTEND_BASE_URL:http://localhost:5173}
 
-# workspace lifetime, in hours (matches the "expire after 3 hours" requirement)
+# workspace lifetime, in hours
 workspace:
   expiry-hours: 3
-  # how often the expiry job checks for expired workspaces, in ms
   expiry-check-interval-ms: 60000
-  # how often buffered Yjs updates are flushed to MongoDB, in ms
   persistence-flush-interval-ms: 5000
