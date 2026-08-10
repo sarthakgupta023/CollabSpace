@@ -1,19 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as Y from 'yjs';
+import { getWebSocketUrl } from '../api/client.js';
 
-/**
- * Connects a Y.Doc to the backend's binary WebSocket relay.
- *
- * Protocol (deliberately simple - see DocumentWebSocketHandler.java):
- *   - On connect, the server sends every stored update as its own binary
- *     frame, in order. We apply each with origin 'remote' as it arrives.
- *   - After that, any local edit fires the Y.Doc 'update' event; we send
- *     that update's bytes straight over the socket.
- *   - Any binary frame we receive after the initial replay is a peer's
- *     live edit - apply it the same way.
- *   - A text frame starting with "WORKSPACE_CLOSED:" means the workspace
- *     ended or expired; the caller gets notified via onClosed.
- */
 export function useYjsConnection(workspaceId, userId, displayName, role, onClosed) {
   const ydocRef = useRef();
   const [connected, setConnected] = useState(false);
@@ -26,9 +14,8 @@ export function useYjsConnection(workspaceId, userId, displayName, role, onClose
     if (!workspaceId || !userId) return;
 
     const ydoc = ydocRef.current;
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const params = new URLSearchParams({ userId, displayName: displayName || '', role: role || 'VIEWER' });
-    const socket = new WebSocket(`${wsProtocol}://${window.location.host}/ws/workspace/${workspaceId}?${params}`);
+    const socket = new WebSocket(`${getWebSocketUrl(workspaceId)}?${params}`);
     socket.binaryType = 'arraybuffer';
 
     socket.onopen = () => setConnected(true);

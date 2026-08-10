@@ -1,9 +1,19 @@
 // TODO: once real auth is added, swap X-User-Id for an Authorization: Bearer <jwt> header.
 
-// Updated BASE_URL to connect to Spring Boot port 8080 locally or env variable in production
 const BASE_URL = import.meta.env.VITE_API_BASE_URL 
   ? `${import.meta.env.VITE_API_BASE_URL}/api` 
   : 'http://localhost:8080/api';
+
+// Derive or get WebSocket Base URL (e.g., wss://collabspace-backend.onrender.com)
+const WS_BASE_URL = import.meta.env.VITE_WS_URL 
+  ? import.meta.env.VITE_WS_URL 
+  : (import.meta.env.VITE_API_BASE_URL
+      ? import.meta.env.VITE_API_BASE_URL.replace(/^http/, 'ws')
+      : 'ws://localhost:8080');
+
+export function getWebSocketUrl(workspaceId) {
+  return `${WS_BASE_URL}/ws/workspace/${workspaceId}`;
+}
 
 function getUserId() {
   return localStorage.getItem('userId');
