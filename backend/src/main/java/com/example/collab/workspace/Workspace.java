@@ -9,17 +9,15 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "workspaces")
-@Data
 @NoArgsConstructor
 public class Workspace {
 
     @Id
-    private String id; // shareable link uses this directly: /w/{id}
+    private String id;
 
     @Column(nullable = false)
     private String ownerUserId;
@@ -46,5 +44,53 @@ public class Workspace {
         w.setCreatedAt(Instant.now());
         w.setExpiresAt(Instant.now().plusSeconds(expiryHours * 3600));
         return w;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getOwnerUserId() {
+        return ownerUserId;
+    }
+
+    public void setOwnerUserId(String ownerUserId) {
+        this.ownerUserId = ownerUserId;
+    }
+
+    public String getOwnerDisplayName() {
+        return ownerDisplayName;
+    }
+
+    public void setOwnerDisplayName(String ownerDisplayName) {
+        this.ownerDisplayName = ownerDisplayName;
+    }
+
+    public WorkspaceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(WorkspaceStatus status) {
+        this.status = status;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 }
